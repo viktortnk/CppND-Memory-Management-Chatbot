@@ -73,6 +73,8 @@ ChatBot::ChatBot(ChatBot &&other)
       _rootNode(std::exchange(other._rootNode, nullptr)),
       _currentNode(std::exchange(other._currentNode, nullptr)) {
   std::cout << "ChatBot Move Constructor" << std::endl;
+
+  _chatLogic->SetChatbotHandle(this);
 };
 
 ChatBot &ChatBot::operator=(ChatBot &&other) {
@@ -85,6 +87,8 @@ ChatBot &ChatBot::operator=(ChatBot &&other) {
   _chatLogic = std::exchange(other._chatLogic, nullptr);
   _rootNode = std::exchange(other._rootNode, nullptr);
   _currentNode = std::exchange(other._currentNode, nullptr);
+
+  _chatLogic->SetChatbotHandle(this);
 
   return *this;
 };
@@ -180,4 +184,9 @@ int ChatBot::ComputeLevenshteinDistance(std::string s1, std::string s2) {
   delete[] costs;
 
   return result;
+}
+
+void ChatBot::SetChatLogicHandle(ChatLogic *chatLogic) {
+  _chatLogic = chatLogic;
+  chatLogic->SetChatbotHandle(this);
 }
